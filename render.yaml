@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: weathernow-ai
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn backend.app:app
+    healthCheckPath: /health
+    disk:
+      name: weather-account-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: FLASK_SECRET_KEY
+        generateValue: true
+      - key: FLASK_COOKIE_SECURE
+        value: "1"
+      - key: DATABASE_PATH
+        value: /var/data/weather.sqlite3
+      - key: NVIDIA_API_KEY
+        sync: false
